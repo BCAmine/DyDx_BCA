@@ -1,2 +1,4 @@
 .env
 venv
+Test_Tools/
+Program/__pycache__/
