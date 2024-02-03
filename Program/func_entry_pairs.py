@@ -6,6 +6,7 @@ from func_private import is_open_positions
 from func_bot_agent import BotAgent
 import pandas as pd
 import json
+import numpy as np
 
 from pprint import pprint
 
@@ -71,9 +72,9 @@ def open_positions(client):
           # Get acceptable price in string format with correct number of decimals
           base_price = series_1[-1]
           quote_price = series_2[-1]
-          accept_base_price = float(base_price) * 1.01 if z_score < 0 else float(base_price) * 0.99
-          accept_quote_price = float(quote_price) * 1.01 if z_score > 0 else float(quote_price) * 0.99
-          failsafe_base_price = float(base_price) * 0.05 if z_score < 0 else float(base_price) * 1.7
+          accept_base_price = np.double(base_price) * 1.01 if z_score < 0 else np.double(base_price) * 0.99
+          accept_quote_price = np.double(quote_price) * 1.01 if z_score > 0 else np.double(quote_price) * 0.99
+          failsafe_base_price = np.double(base_price) * 0.05 if z_score < 0 else np.double(base_price) * 1.7
           base_tick_size = markets["markets"][base_market]["tickSize"]
           quote_tick_size = markets["markets"][quote_market]["tickSize"]
 
@@ -95,15 +96,15 @@ def open_positions(client):
           # Ensure size
           base_min_order_size = markets["markets"][base_market]["minOrderSize"]
           quote_min_order_size = markets["markets"][quote_market]["minOrderSize"]
-          check_base = float(base_quantity) > float(base_min_order_size)
-          check_quote = float(quote_quantity) > float(quote_min_order_size)
+          check_base = np.double(base_quantity) > np.double(base_min_order_size)
+          check_quote = np.double(quote_quantity) > np.double(quote_min_order_size)
 
           # If checks pass, place trades
           if check_base and check_quote:
 
             # Check account balance
             account = client.private.get_account()
-            free_collateral = float(account.data["account"]["freeCollateral"])
+            free_collateral = np.double(account.data["account"]["freeCollateral"])
             print(f"Balance: {free_collateral} and minimum at {USD_MIN_COLLATERAL}")
 
             # Guard: Ensure collateral

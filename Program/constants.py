@@ -4,9 +4,10 @@ from decouple import config
 
 #!!!! Select MODE DEV vs PROD !!!!
 MODE = "DEVELOPEMENT"
+
 ############################ MAIN Execusion Sequence ############################
 # 1- Close all open positions and orders
-ABORT_ALL_POSITIONS = False
+ABORT_ALL_POSITIONS = True
 
 # 2- Find Cointegrated Pairs
 FIND_COINTEGRATED = False
@@ -27,13 +28,13 @@ WINDOW = 21
 LIMIT = 100
 
 # Thresholds - Opening and closing ---------------------
-# static param for the mean reverse pair trading
+# static param for the mean reverse pair trading, 24 default
 MAX_HALF_LIFE = 24
-ZSCORE_THRESH = 1.5
+ZSCORE_THRESH = 1.5 
 # the amount of to be used for each trade
-USD_PER_TRADE = 50
+USD_PER_TRADE = 100
 # the max amount we want the bot to trade
-USD_MIN_COLLATERAL = 1000
+USD_MIN_COLLATERAL = 10000
 
 # Thresholds - Closing
 CLOSE_AT_ZSCORE_CROSS = True

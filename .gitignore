@@ -1,5 +1,7 @@
 .env
-venv
+bot_agents.json
+cointegrated_pairs.csv
+venv/
 Test_Tools/
 Program/__pycache__/
 local/

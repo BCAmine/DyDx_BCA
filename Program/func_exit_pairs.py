@@ -3,6 +3,7 @@ from func_utils import format_number
 from func_public import get_candles_recent
 from func_cointegration import calculate_zscore
 from func_private import place_market_order
+import numpy as np
 import json
 import time
 
@@ -122,8 +123,8 @@ def manage_trade_exits(client):
     # Trigger is_close
     ###
 
-    # Close positions if triggered
-    if is_close:
+    # Close positions if triggered 
+    if not is_close: # For test put not is_close to make sure it will automatically close the positions 
 
       # Determine side - m1
       side_m1 = "SELL"
@@ -136,8 +137,8 @@ def manage_trade_exits(client):
         side_m2 = "BUY"
 
       # Get and format Price
-      price_m1 = float(series_1[-1])
-      price_m2 = float(series_2[-1])
+      price_m1 = np.float64(series_1[-1])
+      price_m2 = np.float64(series_2[-1])
       accept_price_m1 = price_m1 * 1.05 if side_m1 == "BUY" else price_m1 * 0.95
       accept_price_m2 = price_m2 * 1.05 if side_m2 == "BUY" else price_m2 * 0.95
       tick_size_m1 = markets["markets"][position_market_m1]["tickSize"]

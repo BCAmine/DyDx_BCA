@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from func_utils import format_number
 import time
 import json
-from pprint import pprint
+import numpy as np
 
 # Get existing open positions ------------------------------
 def is_open_positions(client, market):
@@ -38,7 +38,9 @@ def place_market_order(client, market, side, size, price, reduce_only):
     position_id = account_response.data["account"]["positionId"]
     # Get expiration time
     server_time = client.public.get_time()
-    expiration = datetime.fromisoformat(server_time.data["iso"].replace("Z", "")) + timedelta(seconds=70)
+    print(server_time.data["iso"].replace("Z", ""))
+    expiration = datetime.fromisoformat(server_time.data["iso"].replace("Z", "")) + timedelta(seconds=3780) # 70 sec was not enough
+    print(expiration)
     # print(position_id, " and ", expiration)
 
     # Place an order
@@ -95,7 +97,7 @@ def abort_all_positions(client):
         side = "SELL"
 
       # Get Price
-      price = float(position["entryPrice"])
+      price = np.double(position["entryPrice"])
       accept_price = price * 1.7 if side == "BUY" else price * 0.3
       tick_size = markets["markets"][market]["tickSize"]
       accept_price = format_number(accept_price, tick_size)

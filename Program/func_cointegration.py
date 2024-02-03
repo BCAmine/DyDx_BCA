@@ -34,8 +34,8 @@ def calculate_zscore(spread):
 
 # Calculate Cointegration
 def calculate_cointegration(series_1, series_2):
-  series_1 = np.array(series_1).astype(np.float64)
-  series_2 = np.array(series_2).astype(np.float64)
+  series_1 = np.array(series_1).astype(np.double)
+  series_2 = np.array(series_2).astype(np.double)
   coint_flag = 0
   coint_res = coint(series_1, series_2)
   coint_t = coint_res[0]
@@ -59,17 +59,18 @@ def store_cointegration_results(df_market_prices):
   # Find cointegrated pairs
   # Start with our base pair
   for index, base_market in enumerate(markets[:-1]):
-    series_1 = df_market_prices[base_market].values.astype(float).tolist()
+    series_1 = df_market_prices[base_market].values.astype(np.double).tolist()
 
     # Get Quote Pair
     for quote_market in markets[index +1:]:
-      series_2 = df_market_prices[quote_market].values.astype(float).tolist()
+      series_2 = df_market_prices[quote_market].values.astype(np.double).tolist()
 
       # Check cointegration
       coint_flag, hedge_ratio, half_life = calculate_cointegration(series_1, series_2)
 
       # Log pair
-      if coint_flag == 1 and half_life <= MAX_HALF_LIFE and half_life > 0:
+      # Copilot recomendation to limit Custo hedge_ratio size
+      if coint_flag == 1 and half_life <= MAX_HALF_LIFE and half_life > 0 :
         criteria_met_pairs.append({
           "base_market": base_market,
           "quote_market": quote_market,

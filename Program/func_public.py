@@ -32,7 +32,7 @@ def get_candles_recent(client, market):
 
   # Construct and return close price series
   close_prices.reverse()
-  prices_result = np.array(close_prices).astype(np.float)
+  prices_result = np.array(close_prices).astype(np.double)
   return prices_result
 
 
