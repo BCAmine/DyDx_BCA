@@ -16,7 +16,16 @@ def manage_trade_exits(client):
     Manage exiting open positions
     Based upon criteria set in constants
   """
-
+  """
+  The `manage_trade_exits` function is responsible for managing the exiting of open positions based on
+  certain criteria set in the constants file.
+  
+  :param client: The `client` parameter is an object that represents the connection to the trading
+  platform API. It is used to make API calls and interact with the trading platform
+  :return: the string "complete" if there are no open positions or if there was an error in matching
+  the open positions with the exchange records. Otherwise, it is returning the number of items
+  remaining after closing positions and saving the file.
+  """
   # Initialize saving output
   save_output = []
 
@@ -28,23 +37,38 @@ def manage_trade_exits(client):
     return "complete"
 
   # Guard: Exit if no open positions in file
+  # The code snippet `if len(open_positions_dict) < 1: return "complete"` is checking if there are no
+  # open positions in the `open_positions_dict` dictionary. If there are no open positions, it
+  # immediately returns the string "complete". This is used as a guard clause to exit the function early
+  # if there are no open positions to manage.
   if len(open_positions_dict) < 1:
     return "complete"
 
   # Get all open positions per trading platform
+  # The code snippet is retrieving all open positions from the trading platform API using the
+  # `client.private.get_positions()` method. It specifies the status parameter as "OPEN" to only
+  # retrieve open positions.
   exchange_pos = client.private.get_positions(status="OPEN")
   all_exc_pos = exchange_pos.data["positions"]
   markets_live = []
+  # This code is used to create a list of all
+  # the markets that have open positions in the trading platform.
   for p in all_exc_pos:
     markets_live.append(p["market"])
 
   # Protect API
   time.sleep(0.5)
 
-  # Check all saved positions match order record
-  # Exit trade according to any exit trade rules
+
   for position in open_positions_dict:
 
+  # Check all saved positions match order record
+  # Exit trade according to any exit trade rules
+  # The code is iterating over each position in the `open_positions_dict` dictionary in the JESON file. For each
+  # position, it extracts the matching information from the file for market 1 and market 2. It then
+  # retrieves the order information for market 1 and market 2 from the trading platform API using the
+  # `client.private.get_order_by_id()` method.
+    
     # Initialize is_close trigger
     is_close = False
 
@@ -77,6 +101,9 @@ def manage_trade_exits(client):
     order_side_m2 = order_m2.data["order"]["side"]
 
     # Perform matching checks
+    # The code is checking if the market, size, and side
+    # of the position in the JSON file match the market, size, and side of the order retrieved from
+    # the trading platform API for market 1 and market 2.
     check_m1 = position_market_m1 == order_market_m1 and position_size_m1 == order_size_m1 and position_side_m1 == order_side_m1
     check_m2 = position_market_m2 == order_market_m2 and position_size_m2 == order_size_m2 and position_side_m2 == order_side_m2
     check_live = position_market_m1 in markets_live and position_market_m2 in markets_live
@@ -102,6 +129,7 @@ def manage_trade_exits(client):
     if CLOSE_AT_ZSCORE_CROSS:
 
       # Initialize z_scores
+      # This code snippet calculates the current z-score for a spread between two series of data.
       hedge_ratio = position["hedge_ratio"]
       z_score_traded = position["z_score"]
       if len(series_1) > 0 and len(series_1) == len(series_2):
@@ -109,12 +137,14 @@ def manage_trade_exits(client):
         z_score_current = calculate_zscore(spread).values.tolist()[-1]
 
       # Determine Trade Close trigger /!\/!\/!\/!\/!\
+      # The code snippet `z_score_level_check = abs(z_score_current) >= abs(z_score_traded)` is
+      # checking if the absolute value of the current z-score is greater than or equal to the absolute
+      # value of the traded z-score. This is used to determine if the z-score has reached a certain level
       z_score_level_check = abs(z_score_current) >= abs(z_score_traded)
       z_score_cross_check = (z_score_current < 0 and z_score_traded > 0) or (z_score_current > 0 and z_score_traded < 0)
 
       # Close trade
       if z_score_level_check and z_score_cross_check:
-
         # Initiate close trigger
         is_close = True
 
@@ -124,7 +154,7 @@ def manage_trade_exits(client):
     ###
 
     # Close positions if triggered 
-    if not is_close: # For test put not is_close to make sure it will automatically close the positions 
+    if is_close: # For test put 'not is_close' to make sure it will automatically close the positions 
 
       # Determine side - m1
       side_m1 = "SELL"

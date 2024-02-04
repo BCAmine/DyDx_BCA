@@ -36,7 +36,7 @@ USD_PER_TRADE = 100
 # the max amount we want the bot to trade
 USD_MIN_COLLATERAL = 10000
 
-# Thresholds - Closing
+# Thresholds - Closing Strategy ( we can add Flag to enable other indectors to be add in the func_exit_pairs.py)
 CLOSE_AT_ZSCORE_CROSS = True
 # ------------------------------------------------
 

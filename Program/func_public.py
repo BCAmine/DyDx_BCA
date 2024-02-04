@@ -11,6 +11,16 @@ ISO_TIMES = get_ISO_times()
 
 
 # Get Candles recent
+"""
+The function `get_candles_recent` retrieves the recent close prices of a given market using a client
+API and returns them as an array.
+
+:param client: The "client" parameter is an object that represents the connection to the API. It is
+used to make requests to the API and retrieve data
+:param market: The market parameter is the trading pair or symbol for which you want to retrieve the
+candlestick data. It could be something like "BTC-USDT" or "ETH-BTC"
+:return: The function `get_candles_recent` returns an array of close prices for a given market.
+"""
 def get_candles_recent(client, market):
 
   # Define output
@@ -37,8 +47,18 @@ def get_candles_recent(client, market):
 
 
 # Get Candles Historical
-def get_candles_historical(client, market):
 
+def get_candles_historical(client, market):
+  """
+  The function `get_candles_historical` retrieves historical price data for a given market and returns
+  a list of dictionaries containing the datetime and close price for each candle.
+  :param client: The "client" parameter is an object that represents the connection to the API. It is
+  used to make requests to the API and retrieve data
+  :param market: The market parameter is the trading pair or symbol for which you want to retrieve the
+  historical candle data. It could be something like "BTC-USD" or "ETH-BTC"
+  :return: a list of dictionaries, where each dictionary contains the datetime and close price for a
+  specific market.
+  """
   # Define output
   close_prices = []
 
@@ -74,7 +94,7 @@ def get_candles_historical(client, market):
 # Construct market prices
 def construct_market_prices(client):
 
-  # Declare variables
+  # Declare variables and list available market stocks
   tradeable_markets = []
   markets = client.public.get_markets()
 
