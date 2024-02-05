@@ -13,10 +13,12 @@ from pprint import pprint
 
 # Open positions
 def open_positions(client):
-
   """
-    Manage finding triggers for trade entry
-    Store trades for managing later on on exit function
+  The `open_positions` function manages finding triggers for trade entry and stores the trades for
+  managing later on the exit function.
+  
+  :param client: The client parameter is an object that represents the connection to the trading
+  platform. It is used to make API calls and interact with the platform's functionalities
   """
 
   # Load cointegrated pairs
@@ -29,6 +31,10 @@ def open_positions(client):
   bot_agents = []
 
   # Opening JSON file
+  # This code block is attempting to open and read the contents of a JSON file named
+  # "bot_agents.json". If the file exists and can be successfully opened and read, it will load the
+  # contents into a dictionary called `open_positions_dict`. Then, it will iterate over the items in
+  # the dictionary and append them to the `bot_agents` list.
   try:
     open_positions_file = open("bot_agents.json")
     open_positions_dict = json.load(open_positions_file)
@@ -40,7 +46,7 @@ def open_positions(client):
   # Find ZScore triggers
   for index, row in df.iterrows():
 
-    # Extract variables
+    # Extract variables from the csv of the cointegrated pairs
     base_market = row["base_market"]
     quote_market = row["quote_market"]
     hedge_ratio = row["hedge_ratio"]
@@ -66,6 +72,8 @@ def open_positions(client):
         if not is_base_open and not is_quote_open:
 
           # Determine side 
+          # The code is determining the side (BUY or SELL) for each market based on the value
+          # of the z_score.
           base_side = "BUY" if z_score < 0 else "SELL"
           quote_side = "BUY" if z_score > 0 else "SELL"
           
@@ -146,8 +154,22 @@ def open_positions(client):
               print("Trade status: Live")
               print("---")
 
+            # END if bot_open_dict["pair_status"] == "LIVE":
+              
+          # END if check_base and check_quote:
+              
+        # END if not is_base_open and not is_quote_open:
+              
+      # END if abs(z_score) >= ZSCORE_THRESH:
+              
+    #  if len(series_1) > 0 and len(series_1) == len(series_2):
+  
+  # END for index, row in df.iterrows():
+
   # Save agents
   print(f"Success: Manage open trades checked")
+  # This code block is checking if the `bot_agents` list is not empty (`len(bot_agents) > 0`). If the
+  # list is not empty, it means that there are open trades that need to be managed.
   if len(bot_agents) > 0:
     with open("bot_agents.json", "w") as f:
       json.dump(bot_agents, f)

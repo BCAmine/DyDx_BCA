@@ -11,18 +11,17 @@ ISO_TIMES = get_ISO_times()
 
 
 # Get Candles recent
-"""
-The function `get_candles_recent` retrieves the recent close prices of a given market using a client
-API and returns them as an array.
-
-:param client: The "client" parameter is an object that represents the connection to the API. It is
-used to make requests to the API and retrieve data
-:param market: The market parameter is the trading pair or symbol for which you want to retrieve the
-candlestick data. It could be something like "BTC-USDT" or "ETH-BTC"
-:return: The function `get_candles_recent` returns an array of close prices for a given market.
-"""
 def get_candles_recent(client, market):
+  """
+  The function `get_candles_recent` retrieves the recent close prices of a given market using a client
+  API and returns them as an array.
 
+  :param client: The "client" parameter is an object that represents the connection to the API. It is
+  used to make requests to the API and retrieve data
+  :param market: The market parameter is the trading pair or symbol for which you want to retrieve the
+  candlestick data. It could be something like "BTC-USDT" or "ETH-BTC"
+  :return: The function `get_candles_recent` returns an array of close prices for a given market.
+  """  
   # Define output
   close_prices = []
 
